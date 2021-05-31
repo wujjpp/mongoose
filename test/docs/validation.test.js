@@ -376,7 +376,7 @@ describe('validation docs', function() {
     // acquit:ignore:start
     assert.equal(err.errors['numWheels'].name, 'CastError');
     assert.equal(err.errors['numWheels'].message,
-      'Cast to Number failed for value "not a number" at path "numWheels"');
+      'Cast to Number failed for value "not a number" (type string) at path "numWheels"');
     // acquit:ignore:end
   });
 
@@ -625,36 +625,6 @@ describe('validation docs', function() {
         done();
         // acquit:ignore:end
       });
-    });
-  });
-
-  /**
-   * New in 4.8.0: update validators also run on `$push` and `$addToSet`
-   */
-
-  it('On $push and $addToSet', function(done) {
-    const testSchema = new Schema({
-      numbers: [{ type: Number, max: 0 }],
-      docs: [{
-        name: { type: String, required: true }
-      }]
-    });
-
-    const Test = db.model('TestPush', testSchema);
-
-    const update = {
-      $push: {
-        numbers: 1,
-        docs: { name: null }
-      }
-    };
-    const opts = { runValidators: true };
-    Test.updateOne({}, update, opts, function(error) {
-      assert.ok(error.errors['numbers']);
-      assert.ok(error.errors['docs']);
-      // acquit:ignore:start
-      done();
-      // acquit:ignore:end
     });
   });
 });
